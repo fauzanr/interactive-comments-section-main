@@ -4,7 +4,9 @@ const App = () => {
   const [currentUser, setCurrentUser] = useState({});
   const [comments, setComments] = useState([]);
   const [editCommentId, setEditCommentId] = useState(null);
+  const [deleteCommentId, setDeleteCommentId] = useState(null);
   const [replyToCommentId, setReplyToCommentId] = useState(null);
+  const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
     fetch("data.json")
@@ -16,32 +18,48 @@ const App = () => {
       .catch(console.log);
   }, []);
 
-  const mapComments = (action = "", data = {}, comments = []) => {
+  const updateComments = (action = "", data = {}) => {
     let found = false;
 
-    const mappedComments = comments.map((comment) => {
-      if (comment.id === data.commentId) {
-        if (action === "reply") {
-          const newComment = {
-            id: Math.random().toString(36).substring(2, 9),
-            content: data.commentContent,
-            createdAt: "Just now",
-            score: 0,
-            replyingTo: comment.user.username,
-            user: { ...currentUser },
-            replies: [],
-          };
-          comment.replies.push(newComment);
-        }
-        if (action === "update") {
-          comment.content = data.commentContent;
-        }
-        found = true;
-      }
-      if (!found) mapComments(action, data, comment.replies);
-      return comment;
-    });
+    const mapComments = (action = "", data = {}, comments = []) => {
+      return comments
+        .filter((comment) => {
+          if (found) return true;
 
+          if (action === "delete" && comment.id === data.commentId) {
+            found = true;
+            return false;
+          }
+          return true;
+        })
+        .map((comment) => {
+          if (found) return comment;
+
+          if (comment.id === data.commentId) {
+            found = true;
+            if (action === "reply") {
+              const newComment = {
+                id: Math.random().toString(36).substring(2, 9),
+                content: data.commentContent,
+                createdAt: "Just now",
+                score: 0,
+                replyingTo: comment.user.username,
+                user: { ...currentUser },
+                replies: [],
+              };
+              comment.replies.push(newComment);
+            }
+            if (action === "update") {
+              comment.content = data.commentContent;
+            }
+          } else if (!found) {
+            comment.replies = mapComments(action, data, comment.replies);
+          }
+          return comment;
+        });
+    };
+
+    const mappedComments = mapComments(action, data, comments);
     setComments(mappedComments);
   };
 
@@ -60,35 +78,39 @@ const App = () => {
       return;
     }
 
-    mapComments(
-      "reply",
-      {
-        commentId: commentReplyId,
-        commentContent,
-      },
-      comments
-    );
+    updateComments("reply", {
+      commentId: commentReplyId,
+      commentContent,
+    });
     setReplyToCommentId(null);
   };
 
   const onUpdateComment = (commentId, commentContent) => {
     if (commentId == null) return;
 
-    mapComments(
-      "update",
-      {
-        commentId: commentId,
-        commentContent,
-      },
-      comments
-    );
+    updateComments("update", {
+      commentId: commentId,
+      commentContent,
+    });
     setEditCommentId(null);
   };
 
-  const onDeleteComment = (commentId) => {
+  const deleteComment = () => {
+    const commentId = deleteCommentId;
     if (commentId == null) return;
 
-    mapComments("delete", { commentId: commentId }, comments);
+    updateComments("delete", { commentId });
+    closeModal();
+  };
+
+  const onDeleteComment = (commentId) => {
+    setDeleteCommentId(commentId);
+    setShowModal(true);
+  };
+
+  const closeModal = () => {
+    setDeleteCommentId(null);
+    setShowModal(false);
   };
 
   const renderComment = (comments, indentLevel = 0) => {
@@ -132,6 +154,11 @@ const App = () => {
           onSubmitReply={onSubmitReply}
         />
       </div>
+      <CommentDeleteModal
+        show={showModal}
+        onCloseModal={closeModal}
+        onDeleteComment={deleteComment}
+      />
     </Fragment>
   );
 };

@@ -17,7 +17,9 @@ const Comment = (props) => {
           >
             +
           </button>
-          <div className="comment-vote__control">{comment.score}</div>
+          <div className="comment-vote__control comment-vote__score">
+            {comment.score}
+          </div>
           <button
             type="button"
             className="button comment-vote__control comment-vote__button"
@@ -34,9 +36,11 @@ const Comment = (props) => {
                 height="32"
                 alt={comment.user.username}
               />
-              <p className="comment-user">{comment.user.username}</p>
+              <p className="comment-user">
+                <strong>{comment.user.username}</strong>
+              </p>
               {currentUser.username === comment.user.username && (
-                <span className="comment-author__tag">you</span>
+                <small className="comment-author__tag">you</small>
               )}
               <p className="comment-time">{comment.createdAt}</p>
             </div>
