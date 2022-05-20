@@ -37,8 +37,8 @@ Users should be able to:
 
 ### Links
 
-- Solution URL: [TBD]()
-- Live Site URL: [TBD]()
+- Solution URL: [https://www.frontendmentor.io/solutions/responsive-comments-section-with-indentation-and-recursive-rendering-JhHa1mY7AN](https://www.frontendmentor.io/solutions/responsive-comments-section-with-indentation-and-recursive-rendering-JhHa1mY7AN)
+- Live Site URL: [https://fauzanr.github.io/interactive-comments-section-main/](https://fauzanr.github.io/interactive-comments-section-main/)
 
 ## My process
 
@@ -47,8 +47,10 @@ Users should be able to:
 - Static HTML
 - CSS custom properties
 - Flexbox
-- Mobile responsive
 - [React](https://reactjs.org/) - JS library
+
+- Mobile responsive
+- LocalStorage persistence
 
 ### What I learned
 

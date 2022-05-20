@@ -1,4 +1,5 @@
 const { useState, useEffect, Fragment } = React;
+const localStorageDataKey = "interactive-comments-section-comments-data";
 
 const App = () => {
   const [currentUser, setCurrentUser] = useState({});
@@ -9,6 +10,15 @@ const App = () => {
   const [showModal, setShowModal] = useState(false);
 
   useEffect(() => {
+    const localStorageData = localStorage.getItem(localStorageDataKey);
+    const data = JSON.parse(localStorageData);
+
+    if (data) {
+      setCurrentUser(data.currentUser);
+      setComments(data.comments);
+      return;
+    }
+
     fetch("data.json")
       .then((res) => res.json())
       .then((data) => {
@@ -67,6 +77,14 @@ const App = () => {
 
     const mappedComments = mapComments(action, data, comments);
     setComments(mappedComments);
+    setLocalStorage(mappedComments);
+  };
+
+  const setLocalStorage = (comments) => {
+    localStorage.setItem(
+      localStorageDataKey,
+      JSON.stringify({ currentUser, comments })
+    );
   };
 
   const onSubmitReply = (commentReplyId, commentContent) => {
@@ -79,7 +97,9 @@ const App = () => {
         user: { ...currentUser },
         replies: [],
       };
-      setComments((comments) => [...comments, newComment]);
+      const newComments = [...comments, newComment];
+      setComments(newComments);
+      setLocalStorage(newComments);
       setReplyToCommentId(null);
       return;
     }
