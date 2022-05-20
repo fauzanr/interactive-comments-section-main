@@ -22,6 +22,7 @@ const CommentReplyForm = (props) => {
     const commentContent = textareaRef.current.value.trim();
     if (!commentContent) return;
     props.onSubmitReply(commentReplyId, commentContent);
+    textareaRef.current.value = "";
   };
 
   return (
@@ -54,7 +55,7 @@ const CommentReplyForm = (props) => {
           >
             SEND
           </button>
-          {isReplying && (
+          {/* {isReplying && (
             <button
               type="submit"
               className="button button-danger"
@@ -62,7 +63,7 @@ const CommentReplyForm = (props) => {
             >
               Cancel
             </button>
-          )}
+          )} */}
         </div>
       </div>
     </div>

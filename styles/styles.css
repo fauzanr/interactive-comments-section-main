@@ -8,10 +8,12 @@
   --LightGray: hsl(223, 19%, 93%);
   --VeryLightGray: hsl(228, 33%, 97%);
   --White: hsl(0, 0%, 100%);
+  --fontSize: 16px;
 }
 
 body {
   margin: 0;
+  min-width: 375px;
 }
 * {
   font-family: "Rubik";
@@ -19,7 +21,7 @@ body {
 p,
 textarea,
 button {
-  font-size: 16px;
+  font-size: var(--fontSize);
   margin: 0;
 }
 #app {
@@ -61,6 +63,7 @@ button {
 .comments {
   display: flex;
   flex-direction: column;
+  width: 100%;
   max-width: 710px;
   padding: 1rem 0;
 }
@@ -78,20 +81,24 @@ button {
   height: 100%;
   background: var(--LightGray);
 }
-.comment {
+.comment-container {
   flex: auto;
-  display: flex;
-  align-items: flex-start;
-  margin-bottom: 1rem;
+  padding: 1.5rem;
   background: var(--White);
   border-radius: 4px;
+  margin-bottom: 1rem;
+}
+.comment {
+  display: flex;
+  align-items: flex-start;
+  position: relative;
 }
 .comment-vote {
   flex: none;
   display: flex;
   flex-direction: column;
   align-items: center;
-  padding: 1.5rem;
+  margin-right: 1.5rem;
 }
 .comment-vote__control {
   display: flex;
@@ -119,8 +126,9 @@ button {
 }
 .comment-body {
   flex: auto;
-  padding: 1.5rem;
-  padding-left: 0;
+  display: flex;
+  flex-direction: column;
+  width: 100%;
 }
 .comment-header {
   display: flex;
@@ -140,6 +148,8 @@ button {
 .comment-actions {
   display: flex;
   align-items: center;
+  position: absolute;
+  right: 0;
 }
 .comment-content {
   margin-top: 0.5rem;
@@ -155,6 +165,7 @@ button {
   flex: auto;
   display: flex;
   align-items: flex-start;
+  justify-content: space-between;
   gap: 1rem;
   border-radius: 4px;
   padding: 1.5rem;
@@ -212,4 +223,46 @@ button {
   display: flex;
   gap: 8px;
   justify-content: flex-end;
+}
+
+@media screen and (max-width: 710px) {
+  :root {
+    --fontSize: 14px
+  }
+  .comment-indent {
+    width: clamp(0px, 7vw, 80px);
+  }
+  .comment {
+    flex-direction: column-reverse;
+  }
+  .comment-vote {
+    flex-direction: row;
+    padding-top: 0;
+  }
+  .comment-vote {
+    margin-top: 1.5rem;
+  }
+  .comment-vote__control:first-child {
+    border-radius: 8px 0 0 8px;
+  }
+  .comment-vote__control:last-child {
+    border-radius: 0 8px 8px 0;
+  }
+  .comment-actions {
+    bottom: 0;
+  }
+  .comment-form {
+    flex-wrap: wrap;
+  }
+  .comment-form img {
+    order: 1;
+    height: 28px;
+    width: auto;
+  }
+  .comment-form__actions {
+    order: 2;
+  }
+  .comment-textarea {
+    flex: 1 1 100%;
+  }
 }

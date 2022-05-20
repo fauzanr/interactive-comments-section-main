@@ -47,6 +47,7 @@ Users should be able to:
 - Static HTML
 - CSS custom properties
 - Flexbox
+- Mobile responsive
 - [React](https://reactjs.org/) - JS library
 
 ### What I learned
@@ -110,7 +111,6 @@ return (
 
 To Do(s):
 
-- delete comment
 - use api
 
 ### Useful resources

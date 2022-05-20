@@ -52,6 +52,12 @@ const App = () => {
             if (action === "update") {
               comment.content = data.commentContent;
             }
+            if (action === "upvote") {
+              comment.score = comment.score + 1;
+            }
+            if (action === "downvote") {
+              comment.score = comment.score - 1;
+            }
           } else if (!found) {
             comment.replies = mapComments(action, data, comment.replies);
           }
@@ -83,6 +89,14 @@ const App = () => {
       commentContent,
     });
     setReplyToCommentId(null);
+  };
+
+  const upvote = (commentId) => {
+    updateComments("upvote", { commentId });
+  };
+
+  const downvote = (commentId) => {
+    updateComments("downvote", { commentId });
   };
 
   const onUpdateComment = (commentId, commentContent) => {
@@ -126,6 +140,8 @@ const App = () => {
           replyToComment={(commentId) => setReplyToCommentId(commentId)}
           onUpdateComment={onUpdateComment}
           onDeleteComment={onDeleteComment}
+          onUpvote={upvote}
+          onDownvote={downvote}
         />
         {renderComment(comment.replies, indentLevel + 1)}
         {replyToCommentId === comment.id && (
@@ -149,10 +165,12 @@ const App = () => {
     <Fragment>
       <div className="comments">
         {commentsView}
-        <CommentReplyForm
-          currentUser={currentUser}
-          onSubmitReply={onSubmitReply}
-        />
+        {currentUser.username && (
+          <CommentReplyForm
+            currentUser={currentUser}
+            onSubmitReply={onSubmitReply}
+          />
+        )}
       </div>
       <CommentDeleteModal
         show={showModal}
